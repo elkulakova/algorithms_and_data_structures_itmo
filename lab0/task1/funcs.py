@@ -9,25 +9,21 @@ def sum_square():
 
 
 def sum_file():
-    in_file, out_file = map(str, input().split())
-    with open(in_file) as f:
+    with open('input.txt') as f:
         a, b = map(int, f.readline().split())
 
-    with open(out_file, 'w') as f:
+    with open('output.txt', 'w') as f:
         f.write(str(a + b))
 
     return a + b
 
 
 def sum_square_file():
-    in_file, out_file = map(str, input().split())
-    with open(in_file) as f:
+    with open('input.txt') as f:
         a, b = map(int, f.readline().split())
 
-    with open(out_file, 'w') as f:
+    with open('output.txt', 'w') as f:
         f.write(str(a + b**2))
 
     return a + b**2
 
-
-print(sum_square_file())
