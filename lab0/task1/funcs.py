@@ -27,3 +27,5 @@ def sum_square_file():
 
     return a + b**2
 
+if __name__ == "__main__":
+    print(sum_square_file())
