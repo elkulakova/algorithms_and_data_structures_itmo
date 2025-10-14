@@ -2,21 +2,16 @@ from measurments import *
 from random_letters import *
 
 def letters_sort(tuples):
-   # sort in descending order by the number of letters' occurrences
-    if len(tuples) > 1:
-        sort_success = False
-        n = len(tuples)
-        while not sort_success:
-            j = n - 1
-            while j >= 0 and tuples[j - 1][1] >= tuples[j][1]:
-                j -= 1
-                if j > 0:
-                    continue
-                else:
-                    sort_success = True
-            while j > 0 and tuples[j - 1][1] < tuples[j][1]:
-                tuples[j - 1], tuples[j] = tuples[j], tuples[j - 1]
-                j -= 1
+    # sort in descending order by the number of letters' occurrences
+    n = len(tuples)
+    if n > 1:
+       for i in range(1, n):
+           current = tuples[i][1]
+           pos = i
+
+           while pos > 0 and tuples[pos - 1][1] < current:
+               tuples[pos], tuples[pos - 1] = tuples[pos - 1], tuples[pos]
+               pos -= 1
 
     sorted_vals = []
     for k, v in tuples:
@@ -79,11 +74,13 @@ def create_palindrome(tuples):
 @timeit
 def plndrm():
     with open('input.txt') as f:
-        data = f.readline()
+        data = f.readlines()
 
-    crazy_code = str(data)
-    if len(crazy_code) < 2:
-        return crazy_code
+    n, crazy_code = int(data[0]), str(data[1])
+    if n < 2:
+        with open('output.txt', 'w') as f:
+            f.writelines(crazy_code)
+        return n, crazy_code
 
     tuples = []
     let_set = set()
@@ -103,12 +100,11 @@ def plndrm():
     with open('output.txt', 'w') as f:
         f.writelines(output)
 
-    return output
+    return len(output), output
 
 if __name__ == "__main__":
-    abracadabra()
-    palind = plndrm()
-    print(palind)
+    abracadabra(100000)
+    ln, palind = plndrm()
     if len(palind) % 2 == 0:
         lft = palind[:len(palind)//2]
         rght = palind[len(palind)//2:]
@@ -119,3 +115,5 @@ if __name__ == "__main__":
         rght = palind[(len(palind) // 2) + 1:]
         rght = rght[::-1]
         assert lft == rght, 'not a palindrome......'
+
+    print(ln, palind)

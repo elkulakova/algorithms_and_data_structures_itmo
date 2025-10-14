@@ -10,6 +10,6 @@ def abracadabra(n=None):
         string += chr(num)
 
     with open('input.txt', 'w') as f:
-        f.writelines(string)
+        f.writelines([f'{str(n)}\n', string])
 
     return None

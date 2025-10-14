@@ -33,8 +33,8 @@ def timeit(func):
         end_time = time.perf_counter()
         total_time = end_time - start_time
         with open('input.txt') as f:
-            input_val = f.readline()
-        print(f'Function {func.__name__}({len(str(input_val))}) took {total_time:.4f} seconds')
+            input_val = f.readlines()
+        print(f'Function {func.__name__}({int(input_val[0])}) took {total_time:.4f} seconds')
         return result
 
     return timeit_wrapper

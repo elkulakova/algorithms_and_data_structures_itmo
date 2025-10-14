@@ -34,7 +34,8 @@ def timeit(func):
         total_time = end_time - start_time
         with open('input.txt') as f:
             data = f.readlines()
-        input_val = len(list(map(int, data[0].split())))
+        val_types = type(data[1])
+        input_val = len(list(map(val_types, data[0].split())))
         print(f'Function {func.__name__}({input_val}) took {total_time:.4f} seconds')
         return result
 

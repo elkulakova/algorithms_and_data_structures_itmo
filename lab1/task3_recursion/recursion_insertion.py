@@ -1,8 +1,7 @@
 from measurments import *
 from random_array import *
 
-@measure_memory_usage
-@timeit
+@measure_performance
 def recursion_insert():
     with open('input.txt') as f:
         data = f.readlines()
@@ -19,25 +18,27 @@ def recursion_insert():
     arr = recursion_insert()
     arr.append(k)
 
-    i = n - 2
-    while arr[i] > arr[i+1] and i > 0:
-        i -= 1
+    for i in range(1, n):
+        current = arr[i]
+        pos = i
 
-    while i >= 0 and arr[i + 1] > arr[i]:
-        arr[i], arr[i + 1] = arr[i + 1], arr[i]
-        i -= 1
+        while pos > 0 and arr[pos - 1] < current:
+            arr[pos], arr[pos - 1] = arr[pos - 1], arr[pos]
+            pos -= 1
 
     with open('output.txt', 'w') as f:
         f.write(" ".join(map(str, arr)))
     return arr
 
 if __name__ == "__main__":
-    generate_array(15)
-    with open('input.txt') as f:
-        data = f.readlines()
+    generate_array(10)
+    with open('input.txt') as fl:
+        inp = fl.readlines()
 
-    _, init_arr = int(data[0]), list(map(int, data[1].split(',')))
+    ln, array = inp[0], list(map(int, inp[1].split(',')))
 
     sort_arr = recursion_insert()
-    print(f'INITIAL ARRAY: {init_arr},\nSORTED ARRAY: {sort_arr}')
-    assert sorted(init_arr, reverse=True) == sort_arr, 'not sorted!!!!!'
+    print(f'INITIAL ARRAY: {array},\nSORTED ARRAY: {sort_arr}')
+    with open('input.txt', 'w') as fl:
+        fl.writelines([f'{ln}', f'{", ".join(map(str, array))}'])
+    assert sorted(array, reverse=True) == sort_arr, 'not sorted!!!!!'
