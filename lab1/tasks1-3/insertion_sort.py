@@ -7,7 +7,7 @@ def sort_insert():
     with open('input.txt') as f:
         data = f.readlines()
 
-    n, arr = int(data[0]), list(map(int, data[1].split(',')))
+    n, arr = int(data[0]), list(map(int, data[1].split()))
 
     index_array = [1]
     for i in range(1, n):
@@ -23,4 +23,8 @@ def sort_insert():
     return arr
 
 if __name__ == "__main__":
-    sort_insert()
+    with open('input.txt') as fl:
+        d = fl.readlines()
+    init_array = list(map(int, d[1].split()))
+    sarr = sort_insert()
+    assert sorted(init_array) == sarr, 'not sorted...'
