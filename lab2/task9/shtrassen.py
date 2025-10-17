@@ -5,12 +5,12 @@ from measurments import *
 def get_data():
     with open('input.txt') as f:
         data = f.readlines()
-    n = int(data[0])
-    mat_a, mat_b = np.array([list(map(int, i.split())) for i in data[1:n+1]]), np.array([list(map(int, i.split())) for i in data[n+1:]])
-    return n, mat_a, mat_b
+    n, pad = int(data[0]), int(data[1])
+    mat_a, mat_b = np.array([list(map(int, i.split())) for i in data[2:pad+2]]), np.array([list(map(int, i.split())) for i in data[pad+2:]])
+    return n, pad, mat_a, mat_b
 
 @measure_performance
-def shtrassen_multiplication(n, x, y):
+def shtrassen_multiplication(n, x, y, rn=None):
     if n >= 2:
         q = n // 2
 
@@ -23,6 +23,7 @@ def shtrassen_multiplication(n, x, y):
         f = np.array([i[q:] for i in y[:q]])
         g = np.array([i[:q] for i in y[q:]])
         h = np.array([i[q:] for i in y[q:]])
+        #print(f'A: {a}\nB: {b}\nC: {c}\nD: {d}\n\nE: {e}\nF: {f}\nG: {g}\nH: {h}\n\n')
 
         # p1 = a * (f - h)
         # p2 = (a + b) * h
@@ -64,7 +65,7 @@ def shtrassen_multiplication(n, x, y):
         for i in range(height // 2, height):
             for j in range(width // 2, width):
                 res[i][j] = o[i - height // 2][j - width // 2]
-        return np.array(res)
+        return np.array([i[:rn] for i in res[:rn]]) if rn else np.array(res)
 
     return np.array([x[0] * y[0]])
 
@@ -77,7 +78,7 @@ def matrix_sum(a, b):
     return c
 
 @measure_performance
-def base_matmul(n, x, y):
+def base_matmul(n, x, y, rn=None):
     if n >= 2:
         q = n // 2
 
@@ -132,18 +133,20 @@ def base_matmul(n, x, y):
         for i in range(height // 2, height):
             for j in range(width // 2, width):
                 res[i][j] = o[i - height // 2][j - width // 2]
-        return np.array(res)
+        return np.array([i[:rn] for i in res[:rn]]) if rn else np.array(res)
 
     return np.array([x[0] * y[0]])
 
 if __name__ == "__main__":
-    for i in range(1, 11):
-        generate_data(i)
-        ln, mat1, mat2 = get_data()
-        fin = shtrassen_multiplication(ln, mat1, mat2)
+    for h in range(1, 100):
+        generate_data(h)
+        ln, p, mat1, mat2 = get_data()
+        fin = shtrassen_multiplication(p, mat1, mat2, ln)
+        base_fin = base_matmul(p, mat1, mat2, ln)
+        mat1 = np.array([i[:ln] for i in mat1[:ln]])
+        mat2 = np.array([i[:ln] for i in mat2[:ln]])
         real_res = mat1 @ mat2
         with open('output.txt', 'w') as fl:
             fl.writelines("\n".join(map(str, [" ".join(map(str, row)) for row in fin])))
-        base_fin = base_matmul(ln, mat1, mat2)
         assert all([real_res[i][j] == fin[i][j] == base_fin[i][j] for j in range(ln)] for i in range(ln)), 'not equal......'
         print('--' * 50)
