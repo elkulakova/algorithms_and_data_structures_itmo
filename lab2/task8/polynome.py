@@ -4,7 +4,7 @@ import math
 
 def generate_coefs(n=None):
     if not n:
-        n = random.randint(1, 25)
+        n = random.randint(1, 1000)
 
     if not np.log2(n).is_integer():
         k = math.ceil(np.log2(n))

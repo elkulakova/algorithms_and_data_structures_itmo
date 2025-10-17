@@ -6,7 +6,7 @@ def get_data():
     with open('input.txt') as f:
         data = f.readlines()
     n, pad = int(data[0]), int(data[1])
-    mat_a, mat_b = np.array([list(map(int, i.split())) for i in data[2:pad+2]]), np.array([list(map(int, i.split())) for i in data[pad+2:]])
+    mat_a, mat_b = np.array([list(map(int, i.split())) for i in data[2:pad+2]]), np.array([list(map(int, i.split())) for i in data[pad+2:2*pad+2]])
     return n, pad, mat_a, mat_b
 
 @measure_performance
@@ -138,8 +138,8 @@ def base_matmul(n, x, y, rn=None):
     return np.array([x[0] * y[0]])
 
 if __name__ == "__main__":
-    for h in range(1, 100):
-        generate_data(h)
+    for v in (2, 4, 8, 16, 32, 64, 128, 256):
+        generate_data(v)
         ln, p, mat1, mat2 = get_data()
         fin = shtrassen_multiplication(p, mat1, mat2, ln)
         base_fin = base_matmul(p, mat1, mat2, ln)

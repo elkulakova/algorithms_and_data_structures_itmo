@@ -124,7 +124,7 @@ def measure_base_performance(func):
             t.join()
 
             mem_after = process.memory_info().rss
-            peak_usage = max(0, peak[0] - mem_after) / 1024
+            peak_usage = peak[0] / 1024#max(0, peak[0] - mem_after) / 1024
 
             print(f"Function {func.__name__}\nTime taken: {end_time - start_time:.4f} s\n"
                   f"Peak memory: {peak_usage:.2f} KB")

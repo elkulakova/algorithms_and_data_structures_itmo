@@ -46,7 +46,7 @@ def merge_sort(arr, p, r):
     return arr
 
 if __name__ == "__main__":
-    #generate_array(2*10000, 'asc')
+    generate_array(1)
     ln, array = get_data()
     #print(f'INITIAL ARRAY:{array}')
     sarr = merge_sort(array, 0, ln)

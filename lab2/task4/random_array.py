@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-def generate_array(n=None, pattern=None):
+def generate_arrays(n=None, pattern=None):
     if not n:
         n = random.randint(1, 2 * 10**4)
     if pattern == 'asc':

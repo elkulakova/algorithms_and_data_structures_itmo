@@ -33,7 +33,7 @@ def merge_sort(n, arr):
     return arr
 
 if __name__ == "__main__":
-    generate_array(10, pattern='asc')
+    generate_array(100000)
     ln, array = get_data()
     sarr = merge_sort(ln, array)
     with open('output.txt', 'w') as fl:

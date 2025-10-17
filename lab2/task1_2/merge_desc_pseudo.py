@@ -11,7 +11,6 @@ def get_data():
 
 fin_data = []
 def merge(arr, p, q, r):
-    print(f'{arr, p, q, r}')
     n1 = q - p
     n2 = r - q
     lft = [0 for _ in range(n1 + 1)]
@@ -20,19 +19,18 @@ def merge(arr, p, q, r):
     lft[:n1] = arr[p:q]
     rght[:n2] = arr[q:r]
 
-    lft[-1] = -inf
-    rght[-1] = -inf
+    lft[-1] = inf
+    rght[-1] = inf
     i, j = 0, 0
 
     for k in range(p, r):
-        if lft[i] >= rght[j]:
+        if lft[i] <= rght[j]:
             arr[k] = lft[i]
             i += 1
         else:
             arr[k] = rght[j]
             j += 1
     fin_data.append(f'{p + 1}, {r}, {arr[p]}, {arr[r-1]}\n')
-    print(lft, rght, arr)
     return arr
 
 def merge_sort(arr, p, r):
@@ -44,13 +42,10 @@ def merge_sort(arr, p, r):
     return arr
 
 if __name__ == "__main__":
-    #generate_array(10, 'asc')
+    generate_array(1)
     ln, array = get_data()
-    print(f'INITIAL ARRAY: {array}')
     sarr = merge_sort(array, 0, ln)
     fin_data.append(" ".join(map(str, sarr)))
     with open('output.txt', 'w') as fl:
         fl.writelines(fin_data)
-
-    assert sorted(array, reverse=True) == sarr, 'not sorted.....'
-    print(sarr)
+    assert sorted(array) == sarr, 'not sorted.....'

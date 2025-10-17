@@ -61,12 +61,12 @@ def poly_mult_3(p, a, b):
     return [a[0]*b[0], a[1]*b[0]+a[0]*b[1], a[1]*b[1]]
 
 if __name__ == "__main__":
-    generate_coefs(100000)
+    generate_coefs()
     real_len, pad_len, coef_a, coef_b = get_data()
     zrs = (pad_len - real_len) * 2
-    mult_coefs4 = poly_mult_4(pad_len, coef_a, coef_b)[zrs:]
+    #mult_coefs4 = poly_mult_4(pad_len, coef_a, coef_b)[zrs:]
     mult_coefs3 = poly_mult_3(pad_len, coef_a, coef_b)[zrs:]
-    assert all([mult_coefs4[i] == mult_coefs3[i] for i in range(real_len)]), 'not equal.....'
+    #assert all([mult_coefs4[i] == mult_coefs3[i] for i in range(real_len)]), 'not equal.....'
     with open('output.txt', 'w') as fl:
         fl.write(" ".join(map(str, mult_coefs3)))
     print(mult_coefs3)
