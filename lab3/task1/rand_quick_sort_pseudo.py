@@ -23,7 +23,7 @@ def randomized_quick_sort(A, l, r):
     return A
 
 if __name__ == "__main__":
-    #generate_array(10**4, pattern='asc')
+    #generate_array(10**4)
     with open('input.txt') as f:
         n, arr = int(f.readline()), list(map(int, f.readline().split()))
 
