@@ -34,11 +34,10 @@ def measure_performance(func):
             tracemalloc.stop()
 
             with open('input.txt') as f:
-                data = f.readlines()
+                n, k = tuple(map(int, f.readline().split()))
 
-            lngth = int(data[0])
-            print(f"Function {func.__name__}({lngth}) took {total_time:.4f} seconds")
-            print(f"Peak memory usage: {peak / 1024:.2f} KB")
+            print(f"Function {func.__name__}(n={n}, k={k}) took {total_time:.4f} seconds")
+            print(f"Peak memory usage: {peak / (1024 ** 2):.2f} MB ({peak / 1024:.2f} KB)")
             print("-" * 50)
 
             # сбрасываем флаг
