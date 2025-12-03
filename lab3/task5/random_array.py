@@ -12,6 +12,6 @@ def generate_array(n=None, pattern=None):
         fin_arr = random.choices(range(0, 1000), k=n)
 
     with open('input.txt', 'w') as f:
-        f.writelines([f'{str(n)}\n', " ".join(map(str, fin_arr))])
+        f.write(" ".join(map(str, fin_arr)))
 
     return None

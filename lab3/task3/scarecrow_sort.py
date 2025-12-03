@@ -27,21 +27,21 @@ def randomized_quick_sort(A, l, r):
         randomized_quick_sort(A, m2 + 1, r)
     return A
 
-@measure_base_performance
+@measure_performance
 def scare_sort(arr, n, k):
     sarr = randomized_quick_sort(arr[:], 0, len(arr) - 1)
     if n < k:
         if arr == sarr:
-            return 'yes'
-        return 'no'
+            return 'ДА'
+        return 'НЕТ'
     for r in range(k):
         scared = randomized_quick_sort(arr[r::k], 0, len(arr[r::k]) - 1)
         if scared != sarr[r::k]:
-            return 'no'
-    return 'yes'
+            return 'НЕТ'
+    return 'ДА'
 
 if __name__ == "__main__":
-    generate_array()
+    generate_array(10**5, 10**5)
     with open('input.txt') as f:
         n, k = tuple(map(int, f.readline().split()))
         arr = list(map(int, f.readline().split()))

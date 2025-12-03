@@ -36,10 +36,9 @@ def k_nearest(k, dots, n):
     arr = [(dots[i], dist2(dots[i])) for i in range(n)]
     arr = randomized_quick_sort(arr, 0, n - 1)
     return [p for p, d2 in arr[:k]]
-        # внутри каждого икса сортируем по игреку, но надо как-то предусмотреть ситуацию, когда с большим иксом может быть игрек такой, что он расстояние уменьшает сильно
 
 if __name__ == '__main__':
-    generate_dots(10**5, 3)
+    generate_dots()
     with open('input.txt') as f:
         n, k = tuple(map(int, f.readline().split()))
         dots = [tuple(map(int, f.readline().split())) for _ in range(n)]

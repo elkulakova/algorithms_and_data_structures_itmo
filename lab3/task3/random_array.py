@@ -1,5 +1,4 @@
 import random
-import numpy as np
 
 
 def generate_array(n=None, k=None):

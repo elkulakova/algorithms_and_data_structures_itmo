@@ -35,44 +35,67 @@ def randomized_quick_sort(A, l, r, by='x'):
 def dist(p1, p2):
     return ((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2) ** 0.5
 
-@measure_base_performance
-def min_distance(n, dots):
-    # сортировка по иксам => делим пополам => рекурсивно ищем минимальное расстояние в левой и правой части
-    # потом ищем минимальное расстояние между точками, которые лежат на расстоянии min_dist и меньше от середины
-    if n <= 3:
-        md = float('inf')
-        for i in range(n):
-            for j in range(i + 1, n):
-                md = min(md, dist(dots[i], dots[j]))
-        return md
+def brute_force(points):
+    n = len(points)
+    best = float('inf')
+    for i in range(n):
+        for j in range(i + 1, n):
+            d = dist(points[i], points[j])
+            if d < best:
+                best = d
+    return best
 
-    sorted_dots = randomized_quick_sort(dots[:], 0, n - 1)
-    mid_x = sorted_dots[n // 2][0]
-    dl = min_distance(n//2, sorted_dots[:n//2])
-    dr = min_distance(n//2, sorted_dots[n//2:])
+def closest_pair_rec(Px, Py):
+    n = len(Px)
+    if n <= 3:
+        return brute_force(Px)
+
+    mid = n // 2
+    mid_x = Px[mid][0]
+
+    Qx = Px[:mid]
+    Rx = Px[mid:]
+
+    Qy = []
+    Ry = []
+    for p in Py:
+        if p[0] <= mid_x:
+            Qy.append(p)
+        else:
+            Ry.append(p)
+
+    dl = closest_pair_rec(Qx, Qy)
+    dr = closest_pair_rec(Rx, Ry)
     d = min(dl, dr)
 
-    narrowed_dots = [point for point in sorted_dots if abs(point[0] - mid_x) < d]
-    n_nd = len(narrowed_dots)
-    sorted_ndots = randomized_quick_sort(narrowed_dots, 0, n_nd - 1, 'y')
-    md = float('inf')
-    for i in range(n_nd):
-        for j in range(i + 1, min(i + 8, n_nd)):
-            md = min(md, dist(sorted_ndots[i], sorted_ndots[j]))
-            if md < d:
-                break
+    strip = [p for p in Py if abs(p[0] - mid_x) < d]
 
-    min_dist = min(md, d)
-    return min_dist
+    best = d
+    m = len(strip)
+    for i in range(m):
+        j = i + 1
+        while j < m and (strip[j][1] - strip[i][1]) < best and j <= i + 7:
+            d_ij = dist(strip[i], strip[j])
+            if d_ij < best:
+                best = d_ij
+            j += 1
+
+    return best
+
+@measure_base_performance
+def closest_pair(points):
+    Px = randomized_quick_sort(points[:], 0, len(points) - 1)
+    Py = randomized_quick_sort(points[:], 0, len(points) - 1, by='y')
+    return closest_pair_rec(Px, Py)
 
 if __name__ == '__main__':
-    generate_dots(10**5)
+    #generate_dots()
     with open('input.txt') as f:
         n = int(f.readline())
         dots = [tuple(map(int, f.readline().split())) for _ in range(n)]
 
-    res = min_distance(n, dots)
+    res = closest_pair(dots)
     with open ('output.txt', 'w') as f:
-        f.write(str(res))
+        f.write(f"{res:.6f}")
 
     print(f"{res:.6f}")
