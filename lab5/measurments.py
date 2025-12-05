@@ -37,10 +37,10 @@ def measure_performance(func):
                 data = f.readline()
 
             #lngth = int(data[0])
-            #lngth = int(data)
+            lngth = int(data)
             #lngth = len(data)
-            lngth = tuple(map(int, data.split()))
-            print(f"Function {func.__name__}({lngth[0]}, {lngth[1]}) took {total_time:.4f} seconds")
+            #lngth = tuple(map(int, data.split()))
+            print(f"Function {func.__name__}({lngth}) took {total_time:.4f} seconds")
             print(f"Peak memory usage: {peak / 1024**2:.2f} MB ({peak / 1024:.2f} KB)")
             print("-" * 50)
 

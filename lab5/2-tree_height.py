@@ -1,4 +1,6 @@
 from collections import deque
+from generator import *
+from measurments import *
 
 def build_tree(parent):
     n = len(parent)
@@ -11,7 +13,7 @@ def build_tree(parent):
             children[parent[i]].append(i)
     return root, children
 
-
+@measure_performance
 def get_tree_height(tree):
     if tree is None:
         return 0
@@ -35,6 +37,11 @@ def get_tree_height(tree):
 
 
 if __name__ == "__main__":
+    #tree_generator()
     with open('input.txt') as f:
         n = int(f.readline())
         array = list(map(int, f.readline().split()))
+    h = get_tree_height(array)
+    with open('output.txt', 'w') as f:
+        f.write(str(h))
+    print(h)
