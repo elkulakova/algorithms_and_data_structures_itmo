@@ -23,8 +23,6 @@ class DoubleLinkedList:
         return self.nodes_list[value]
 
     def _in_list(self, node):
-        # узел считается «в списке», если указывает голова/хвост
-        # или у него есть связи prev/next
         if node is self.head or node is self.tail:
             return True
         if node.prev is not None or node.next is not None:
@@ -35,11 +33,9 @@ class DoubleLinkedList:
         node_j = self.get_node(val_j)
         node_i = self.get_node(val_i)
 
-        # нельзя вставить слева от узла, которого нет в списке
         if not self._in_list(node_j):
             return
 
-        # если node_i уже в списке — сначала «вырежем» его
         if self._in_list(node_i):
             self._detach(node_i)
 
@@ -53,7 +49,6 @@ class DoubleLinkedList:
             self.head = node_i
 
     def _detach(self, node):
-        """Вырезать узел из текущего списка, если он в нём есть."""
         if not self._in_list(node):
             return
         left = node.prev
@@ -62,13 +57,11 @@ class DoubleLinkedList:
         if left:
             left.next = right
         else:
-            # node был головой
             self.head = right
 
         if right:
             right.prev = left
         else:
-            # node был хвостом
             self.tail = left
 
         node.prev = node.next = None
@@ -100,11 +93,9 @@ class DoubleLinkedList:
     def add_node_head(self, value):
         node = self.get_node(value)
 
-        # если уже голова — ничего не делаем
         if node is self.head:
             return
 
-        # если узел уже где-то в списке — вырезаем
         if self._in_list(node):
             self._detach(node)
 
@@ -121,7 +112,6 @@ class DoubleLinkedList:
     def add_node_tail(self, value):
         node = self.get_node(value)
 
-        # если уже хвост — ничего не делаем
         if node is self.tail:
             return
 

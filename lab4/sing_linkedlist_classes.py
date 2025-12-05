@@ -23,7 +23,6 @@ class SingleLinkedList:
     def _in_list(self, node):
         if node is self.head or node is self.tail:
             return True
-        # если от головы можно дойти до node
         cur = self.head
         while cur:
             if cur is node:
@@ -32,11 +31,9 @@ class SingleLinkedList:
         return False
 
     def _detach(self, node):
-        """Вырезать узел из списка, если он там есть."""
         if not self._in_list(node):
             return
 
-        # если удаляем голову
         if node is self.head:
             self.head = node.next
             if self.head is None:
@@ -44,20 +41,18 @@ class SingleLinkedList:
             node.next = None
             return
 
-        # ищем предыдущий
         prev = self.head
         while prev and prev.next is not node:
             prev = prev.next
 
         if prev is None:
-            return  # что-то пошло не так
+            return
 
         prev.next = node.next
         if node is self.tail:
             self.tail = prev
         node.next = None
 
-    # ---- операции из задания ----
 
     def show_nodes(self):
         vals = []
@@ -98,7 +93,6 @@ class SingleLinkedList:
             self.tail = None
         node.next = None
 
-    # добавить элемент ПОСЛЕ заданного key
     def add_node_right(self, key_j, key_i):
         node_j = self.find(key_j)
         if node_j is None:
@@ -113,7 +107,6 @@ class SingleLinkedList:
         if self.tail is node_j:
             self.tail = node_i
 
-    # удалить элемент ПОСЛЕ заданного key
     def remove_node_right(self, key_j):
         node_j = self.find(key_j)
         if node_j is None:
