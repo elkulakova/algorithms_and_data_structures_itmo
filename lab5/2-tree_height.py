@@ -1,3 +1,5 @@
+from collections import deque
+
 def build_tree(parent):
     n = len(parent)
     children = [[] for _ in range(n)]
@@ -10,12 +12,26 @@ def build_tree(parent):
     return root, children
 
 
-def get_tree_height(tree, n):
+def get_tree_height(tree):
     if tree is None:
         return 0
-    for i in range(n-1):
-        tree = get_tree_height(tree, i + 1)
-        return [tree.index(leaf) for leaf in tree if leaf == i]
+
+    root, children = build_tree(tree)
+    if root == -1:
+        return 0
+
+    q = deque([root])
+    height = 0
+
+    while q:
+        level_size = len(q)
+        for _ in range(level_size):
+            v = q.popleft()
+            for child in children[v]:
+                q.append(child)
+        height += 1
+
+    return height
 
 
 if __name__ == "__main__":
