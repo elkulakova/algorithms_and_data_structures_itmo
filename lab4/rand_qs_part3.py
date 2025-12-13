@@ -28,12 +28,3 @@ def randomized_quick_sort(A, l, r):
         randomized_quick_sort(A, m2 + 1, r)
     return A
 
-if __name__ == "__main__":
-    generate_array(10**4, pattern='dups')
-    with open('input.txt') as f:
-        n, arr = int(f.readline()), list(map(int, f.readline().split()))
-
-    sarr = randomized_quick_sort(arr, 0, len(arr) - 1)
-    assert all([sorted(arr)[i] == sarr[i] for i in range(len(arr))]), 'not sorted......'
-    with open('output.txt', 'w') as f:
-        f.write(" ".join(map(str, sarr)))

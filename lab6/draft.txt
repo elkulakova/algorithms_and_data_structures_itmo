@@ -1,0 +1,9 @@
+7 1
+abacaba
+aa
+
+7 3
+abacaba
+ab
+ac
+bb
