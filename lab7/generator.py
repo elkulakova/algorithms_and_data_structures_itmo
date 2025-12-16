@@ -38,3 +38,29 @@ def generate_template_and_string(t=None, s=None):
 
     with open('input.txt', 'w') as f:
         f.write(f'{template}\n{string_s}')
+
+def levenshtein_generator(n=None, m=None):
+    if m is None:
+        m = random.randint(1, 5000)
+    if n is None:
+        n = random.randint(1, 5000)
+
+    letters = string.ascii_lowercase
+
+    init = ''.join(random.choice(letters) for _ in range(n))
+    res = ''.join(random.choice(letters) for _ in range(m))
+
+    with open('input.txt', 'w') as f:
+        f.write(f'{init}\n{res}')
+
+def array_generator(n=None, m=None):
+    if m is None:
+        m = random.randint(1, 100)
+    if n is None:
+        n = random.randint(1, 100)
+
+    arra = [random.randint(-10**9 + 1, 10**9) for _ in range(n)]
+    arrb = [random.randint(-10**9 + 1, 10**9) for _ in range(m)]
+
+    with open('input.txt', 'w') as f:
+        f.write(f'{n}\n{" ".join(map(str, arra))}\n{m}\n{" ".join(map(str, arrb))}')
