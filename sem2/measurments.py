@@ -48,6 +48,45 @@ def measure_performance(func):
 
     return wrapper
 
+def measure_plural_performance(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        global _in_recursion, _start_time
+
+        is_outer_call = not _in_recursion
+
+        if is_outer_call:
+            _in_recursion = True
+            _start_time = time.perf_counter()
+            tracemalloc.start()
+
+        try:
+            result = func(*args, **kwargs)
+        finally:
+            # Блок finally гарантирует, что даже при ошибке в функции
+            # мы сможем корректно завершить замеры или сбросить флаг
+            if is_outer_call:
+                end_time = time.perf_counter()
+                total_time = end_time - _start_time
+                current, peak = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
+                _in_recursion = False
+
+                # Безопасное получение аргумента 'n'
+                # Сначала ищем в kwargs, если нет — берем первый элемент args
+                n_val = kwargs.get('n', args[0] if args else "unknown")
+                m_val = kwargs.get('m', args[0] if args else "unknown")
+
+                print(f"\n--- Performance Report ---")
+                print(f"Function: {func.__name__}(n={n_val}, m={m_val})")
+                print(f"Execution time: {total_time:.6f} seconds")
+                print(f"Peak memory: {peak / 1024 ** 2:.2f} MB")
+                print("-" * 30)
+
+        return result
+
+    return wrapper
+
 
 def draft_measure_base_performance(func):
     @wraps(func)
