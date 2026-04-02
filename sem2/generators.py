@@ -84,3 +84,27 @@ def cards_generator(n=None, m=None):
 
     return n, " ".join(map(str, player)), m, " ".join(map(str, table)), trump
 
+def square_generator(n=None, m=None):
+    if n is None:
+        n = random.randint(1, 30)
+    if m is None:
+        m = random.randint(1, 30)
+        while m*n > 30:
+            m = random.randint(1, 30)
+
+    return n, m
+
+def routes_generator(n=None):
+    if n is None:
+        n = random.randint(1, 13)
+    arr = [[10**6 + 1] * n for _ in range(n)]
+
+    for i in range(n):
+        arr[i][i] = 0
+
+    for i in range(n):
+        for j in range(i + 1, n):
+            dist = random.randint(1, 10 ** 6)
+            arr[i][j] = arr[j][i] = dist
+
+    return n, arr

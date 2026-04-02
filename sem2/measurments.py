@@ -41,7 +41,7 @@ def measure_performance(func):
                 print(f"\n--- Performance Report ---")
                 print(f"Function: {func.__name__}(n={n_val})")
                 print(f"Execution time: {total_time:.6f} seconds")
-                print(f"Peak memory: {peak / 1024 ** 2:.2f} MB")
+                print(f"Peak memory: {peak / 1024 ** 2:.6f} MB")
                 print("-" * 30)
 
         return result
@@ -74,8 +74,8 @@ def measure_plural_performance(func):
 
                 # Безопасное получение аргумента 'n'
                 # Сначала ищем в kwargs, если нет — берем первый элемент args
-                n_val = kwargs.get('n', args[0] if args else "unknown")
-                m_val = kwargs.get('m', args[0] if args else "unknown")
+                n_val = kwargs.get('n') or (args[0] if len(args) > 0 else "unknown")
+                m_val = kwargs.get('m') or (args[1] if len(args) > 1 else "unknown")
 
                 print(f"\n--- Performance Report ---")
                 print(f"Function: {func.__name__}(n={n_val}, m={m_val})")
@@ -168,6 +168,52 @@ def measure_base_performance(func):
         n_val = kwargs.get('n', args[0] if args else "unknown")
         print(f"\n--- Performance Report ---")
         print(f"Function: {func.__name__}(n={n_val})")
+        print(f"Execution time: {dt:.6f} seconds")
+        print(f"Peak memory: {kb/1024:.2f} MB ({kb:.2f} KB)")
+        print("-" * 30)
+
+        _flag['in_rec'] = False
+        return res
+    return wrapper
+
+
+def measure_plural_base_performance(func):
+    from functools import wraps
+    import time, psutil, os, threading
+    _flag = {'in_rec': False}
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if _flag['in_rec']:
+            return func(*args, **kwargs)
+
+        _flag['in_rec'] = True
+        proc = psutil.Process(os.getpid())
+        peak = [proc.memory_info().rss]
+        running = [True]
+
+        def monitor():
+            while running[0]:
+                m = proc.memory_info().rss
+                if m > peak[0]:
+                    peak[0] = m
+                time.perf_counter(); time.sleep(0.01)
+
+        t = threading.Thread(target=monitor, daemon=True)
+        t.start()
+        t0 = time.perf_counter()
+        try:
+            res = func(*args, **kwargs)
+        finally:
+            running[0] = False
+            t.join()
+        dt = time.perf_counter() - t0
+        kb = peak[0] / 1024
+
+        n_val = kwargs.get('n') or (args[0] if len(args) > 0 else "unknown")
+        m_val = kwargs.get('m') or (args[1] if len(args) > 1 else "unknown")
+        print(f"\n--- Performance Report ---")
+        print(f"Function: {func.__name__}(n={n_val}, m={m_val})")
         print(f"Execution time: {dt:.6f} seconds")
         print(f"Peak memory: {kb/1024:.2f} MB ({kb:.2f} KB)")
         print("-" * 30)
