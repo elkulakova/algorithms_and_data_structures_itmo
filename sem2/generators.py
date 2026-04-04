@@ -1,5 +1,6 @@
 import random
 import numpy as np
+from math import ceil, floor
 
 
 def stations_generator(d=None, m=None, n=None):
@@ -10,8 +11,8 @@ def stations_generator(d=None, m=None, n=None):
     if n is None:
         n = random.randint(1, 300)
 
-    arr = np.sort(np.random.choice(np.arange(1, d), size=n, replace=False)) if d != 1 else np.array(1)
-    return d, m, n, arr
+    stations = np.sort(np.random.choice(np.arange(1, d), size=n, replace=False)) if n > 1 else np.array(1)
+    return d, m, n, stations
 
 def segments_generator(n=None):
     if n is None:
@@ -27,7 +28,7 @@ def segments_generator(n=None):
 
 def sequences_generator(n=None):
     if n is None:
-        n = random.randint(1, 4000)
+        n = random.randint(1, 40000)
     arr = []
     for i in range(1, n+1):
         arr.append(random.randint(1, i))
@@ -37,15 +38,16 @@ def sequences_generator(n=None):
 def expression_generator(n=None):
     if n is None:
         n = random.randint(0, 14)
+    print(f'n={n}')
 
     if n > 0:
-        digits = np.random.randint(0,10, size=n)
-        operations = np.random.choice(['+', '-', '*'], size=n-1)
+        digits = np.random.randint(0,10, size=n+1)
+        operations = np.random.choice(['+', '-', '*'], size=n)
 
-        expr = "".join(map(str, [digits[i // 2] if i % 2 == 0 else operations[i // 2] for i in range(2*n - 1)]))
+        expr = "".join(map(str, [digits[i // 2] if i % 2 == 0 else operations[i // 2] for i in range(2*n + 1)]))
         return expr, 2*n + 1
     else:
-        return np.random.randint(0, 10, 1), 0
+        return np.random.randint(0, 10, 1), 1
 
 def cards_generator(n=None, m=None):
     if n is None:

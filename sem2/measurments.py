@@ -80,7 +80,7 @@ def measure_plural_performance(func):
                 print(f"\n--- Performance Report ---")
                 print(f"Function: {func.__name__}(n={n_val}, m={m_val})")
                 print(f"Execution time: {total_time:.6f} seconds")
-                print(f"Peak memory: {peak / 1024 ** 2:.2f} MB")
+                print(f"Peak memory: {peak / 1024 ** 2:.6f} MB")
                 print("-" * 30)
 
         return result
