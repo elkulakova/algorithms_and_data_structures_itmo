@@ -1,6 +1,5 @@
 import random
 import numpy as np
-from math import ceil, floor
 
 
 def stations_generator(d=None, m=None, n=None):
