@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-
+# Lab1 generators
 def stations_generator(d=None, m=None, n=None):
     if d is None:
         d = random.randint(1, 10**5)
@@ -109,3 +109,6 @@ def routes_generator(n=None):
             arr[i][j] = arr[j][i] = dist
 
     return n, arr
+
+
+# Lab2 generators
