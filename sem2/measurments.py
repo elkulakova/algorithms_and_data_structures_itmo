@@ -5,6 +5,8 @@ import os
 import psutil
 import threading
 
+from sympy.physics.quantum.spin import m_values
+
 # глобальные переменные, чтобы понимать, что мы входим/выходим из рекурсии
 _in_recursion = False
 _start_time = None
@@ -240,4 +242,110 @@ def measure_perf(func):
         print(f"Memory usage: {peak_mem / 1024**2:.2f} MB ({peak_mem / 1024:.2f} KB)")
         print("-" * 50)
         return result
+    return wrapper
+
+
+import functools
+import sys
+
+# Модуль resource доступен на Unix-системах (Linux, macOS)
+try:
+    import resource
+except ImportError:
+    # Для Windows используем упрощенный psutil без потоков
+
+    resource = None
+
+
+def measure_fast_performance(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # Флаг для рекурсии, прикрепленный к функции
+        if getattr(wrapper, '_in_progress', False):
+            return func(*args, **kwargs)
+
+        wrapper._in_progress = True
+
+        # Начинаем замер
+        start_time = time.perf_counter()
+
+        try:
+            result = func(*args, **kwargs)
+        finally:
+            end_time = time.perf_counter()
+            duration = end_time - start_time
+
+            # Считаем пиковую память
+            if resource:
+                # ru_maxrss возвращает пик в килобайтах (на Linux) или байтах (на macOS)
+                peak_bytes = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+                if sys.platform == 'darwin':  # macOS
+                    peak_mb = peak_bytes / (1024 * 1024)
+                else:  # Linux
+                    peak_mb = peak_bytes / 1024
+            else:
+                # Windows fallback (менее точный, но быстрый)
+                proc = psutil.Process()
+                peak_mb = proc.memory_info().peak_wset / (1024 * 1024)
+
+            # Получаем n для красоты отчета
+            n_val = kwargs.get('n', args[0] if args else "unknown")
+
+            print(f"\n--- [FAST] Performance Report ---")
+            print(f"Function: {func.__name__}(n={n_val})")
+            print(f"Time: {duration:.6f} s")
+            print(f"Peak Memory: {peak_mb:.6f} MB")
+            print("-" * 33)
+
+            wrapper._in_progress = False
+
+        return result
+
+    return wrapper
+
+def measure_plural_fast_performance(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # Флаг для рекурсии, прикрепленный к функции
+        if getattr(wrapper, '_in_progress', False):
+            return func(*args, **kwargs)
+
+        wrapper._in_progress = True
+
+        # Начинаем замер
+        start_time = time.perf_counter()
+
+        try:
+            result = func(*args, **kwargs)
+        finally:
+            end_time = time.perf_counter()
+            duration = end_time - start_time
+
+            # Считаем пиковую память
+            if resource:
+                # ru_maxrss возвращает пик в килобайтах (на Linux) или байтах (на macOS)
+                peak_bytes = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+                if sys.platform == 'darwin':  # macOS
+                    peak_mb = peak_bytes / (1024 * 1024)
+                else:  # Linux
+                    peak_mb = peak_bytes / 1024
+            else:
+                # Windows fallback (менее точный, но быстрый)
+                proc = psutil.Process()
+                peak_mb = proc.memory_info().peak_wset / (1024 * 1024)
+
+            # Получаем n для красоты отчета
+            n_val = kwargs.get('n', args[0] if args else "unknown")
+            m_val = kwargs.get('m', args[0] if args else "unknown")
+
+            print(f"\n--- [FAST] Performance Report ---")
+            print(f"Function: {func.__name__}(n={n_val}, m={m_val})")
+            print(f"Time: {duration:.6f} s")
+            print(f"Peak Memory: {peak_mb:.6f} MB")
+            print("-" * 33)
+
+            wrapper._in_progress = False
+
+        return result
+
     return wrapper
